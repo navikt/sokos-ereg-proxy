@@ -1,0 +1,200 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Ereg Connect Proxy API",
+    "description": "Proxy tjeneste som lar z/OS Connect kalle Ereg.",
+    "contact": {
+      "name": "TØB",
+      "email": "okonomi@nav.no"
+    }
+  },
+  "basePath": "/organisasjon-proxy/api",
+  "tags": [
+    {
+      "name": "organisasjon-proxy.v1"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/v1/organisasjon/{orgnr}": {
+      "get": {
+        "tags": [
+          "organisasjon-proxy.v1"
+        ],
+        "summary": "Kaller Ereg organisasjon og mapper om til OrganisasjonInfo.",
+        "operationId": "organisasjon",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "orgnr",
+            "in": "path",
+            "description": "Organisasjonsnummer som skal s&oslash;kes opp i Ereg. Bruk 990983666 for test.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Call-Id",
+            "in": "header",
+            "description": "Identifikator for kjeden av tjenestekall",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Nav-Consumer-Id",
+            "in": "header",
+            "description": "Identifikator for konsument som gjør tjenestekall",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vellykket forespørsel",
+            "schema": {
+              "$ref": "#/definitions/OrganisasjonInfo"
+            }
+          },
+          "400": {
+            "description": "Ugyldig(e) parameter(e) i foresp&oslash;rsel",
+            "schema": {
+              "$ref": "#/definitions/TjenestefeilResponse"
+            }
+          },
+          "404": {
+            "description": "Fant ikke forespurt(e) entitet(er)",
+            "schema": {
+              "$ref": "#/definitions/TjenestefeilResponse"
+            }
+          },
+          "500": {
+            "description": "Noe gikk galt",
+            "schema": {
+              "$ref": "#/definitions/TjenestefeilResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "OrganisasjonInfo": {
+      "type": "object",
+      "properties": {
+        "organisasjonsnummer": {
+          "type": "string",
+          "example": 990983666,
+          "description": "Organisasjonsnummer"
+        },
+        "organisasjonstype": {
+          "type": "string",
+          "example": "Virksomhet",
+          "description": "Organisasjonstype: Virksomhet/JuridiskEnhet/Organisasjonsledd"
+        },
+        "navn": {
+          "description": "Informasjon om organisasjonsnavn",
+          "$ref": "#/definitions/Navn"
+        },
+        "forretningsadresse": {
+          "description": "Forretningsadresse",
+          "$ref": "#/definitions/Adresse"
+        },
+        "postadresse": {
+          "description": "Postadresse",
+          "$ref": "#/definitions/Adresse"
+        }
+      },
+      "title": "OrganisasjonInfo",
+      "description": "N&oslash;kkelinformasjon for organisasjon"
+    },
+    "Adresse": {
+      "type": "object",
+      "properties": {
+        "adresselinje1": {
+          "type": "string",
+          "description": "Adresselinje #1"
+        },
+        "adresselinje2": {
+          "type": "string",
+          "description": "Adresselinje #2"
+        },
+        "adresselinje3": {
+          "type": "string",
+          "description": "Adresselinje #3"
+        },
+        "kommunenummer": {
+          "type": "string",
+          "example": "0301",
+          "description": "Kommunenummer (kodeverk: Kommuner)"
+        },
+        "landkode": {
+          "type": "string",
+          "example": "JPN",
+          "description": "Landkode (kodeverk: Landkoder)"
+        },
+        "postnummer": {
+          "type": "string",
+          "example": "0557",
+          "description": "Postnummer (kodeverk: Postnummer)"
+        },
+        "poststed": {
+          "type": "string",
+          "description": "Poststed - brukes i forbindelse med utenlandske adresser"
+        }
+      },
+      "title": "Adresse",
+      "description": "Informasjon om adresse"
+    },
+    "Navn": {
+      "type": "object",
+      "properties": {
+        "navnelinje1": {
+          "type": "string",
+          "example": "NAV FAMILIE- OG PENSJONSYTELSER",
+          "description": "Navnelinje #1"
+        },
+        "navnelinje2": {
+          "type": "string",
+          "description": "Navnelinje #2"
+        },
+        "navnelinje3": {
+          "type": "string",
+          "description": "Navnelinje #3"
+        },
+        "navnelinje4": {
+          "type": "string",
+          "description": "Navnelinje #4"
+        },
+        "navnelinje5": {
+          "type": "string",
+          "description": "Navnelinje #5"
+        },
+        "redigertnavn": {
+          "type": "string",
+          "example": "NAV FAMILIE- OG PENSJONSYTELSER OSL",
+          "description": "Redigert navn"
+        }
+      },
+      "title": "Navn",
+      "description": "Informasjon om organisasjonsnavn"
+    },
+    "TjenestefeilResponse": {
+      "type": "object",
+      "properties": {
+        "melding": {
+          "type": "string",
+          "description": "Informasjon om hva som er feil"
+        }
+      },
+      "title": "TjenestefeilResponse",
+      "description": "Responsobjekt ved feil i tjeneste"
+    }
+  }
+}
