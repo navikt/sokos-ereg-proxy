@@ -1,14 +1,73 @@
 plugins {
+    id 'java'
+    id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.21'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+mainClassName = 'no.nav.sokos.ereg.proxy.ApplicationKt'
+
+group 'no.nav.sokos'
+version '1.0.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-client-apache:$ktor_version"
+    implementation "io.ktor:ktor-client-serialization:$ktor_version"
+    implementation "io.ktor:ktor-client-jackson:$ktor_version"
+    implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
+    implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation "io.ktor:ktor-metrics-micrometer:$ktor_version"
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.6.2'
+    implementation "io.prometheus:simpleclient_hotspot:0.9.0"
+
+    implementation 'ch.qos.logback:logback-core:1.2.3'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.6'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testImplementation 'io.mockk:mockk:1.10.4'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test:1.4.21'
+
+    swaggerUI "org.webjars:swagger-ui:3.38.0"
 }
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '15'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '15'
+}
+
+shadowJar {
+    archiveBaseName.set("app")
+    manifest {
+        attributes "Main-Class": "no.nav.sokos.ereg.proxy.ApplicationKt"
+    }
+    dependsOn(generateSwaggerUI)
+}
+
+swaggerSources {
+    ereg_proxy {
+        inputFile = file('spec/ereg-proxy_v1_002.json')
+        ui {
+            outputDir = file("$buildDir/resources/main/api")
+        }
+    }
+}
+
+build.dependsOn generateSwaggerUI
