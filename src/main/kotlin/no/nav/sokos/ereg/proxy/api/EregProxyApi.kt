@@ -2,14 +2,19 @@ package no.nav.sokos.ereg.proxy.api
 
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.util.getOrFail
+import no.nav.sokos.ereg.proxy.ereg.EregException
 import no.nav.sokos.ereg.proxy.ereg.EregService
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
+import org.slf4j.LoggerFactory
+
+private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.EregProxyApiKt")
 
 fun Application.eregProxyApi(eregService: EregService) {
     routing {
@@ -19,14 +24,15 @@ fun Application.eregProxyApi(eregService: EregService) {
                 val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
                 val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""
 
-                val org: Organisasjon = eregService.organisasjon(
-                    navCallId,
-                    navConsumerId,
-                    organisasjonsnummer,
-                    inkluderHierarki = false
-                )
+                try {
+                    val org: Organisasjon = eregService.organisasjon(
+                        navCallId,
+                        navConsumerId,
+                        organisasjonsnummer,
+                        inkluderHierarki = false
+                    )
 
-                call.respond(OK, OrganisasjonInfo(
+                    call.respond(OK, OrganisasjonInfo(
                         organisasjonsnummer = org.organisasjonsnummer,
                         organisasjonstype = org.type,
                         navn = Navn(
@@ -59,8 +65,11 @@ fun Application.eregProxyApi(eregService: EregService) {
                                 poststed = it.poststed
                             )
                         }
-                    )
-                )
+                    ))
+                } catch (e: EregException) {
+                    LOGGER.warn("Ereg returnerte ${e.errorCode} med melding ${e.message}")
+                    call.respond(e.errorCode, TjenestefeilResponse(e.message))
+                }
             }
         }
     }

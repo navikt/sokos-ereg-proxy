@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.util.UUID
 
-private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.kontoregister.HttpServer")
+private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.HttpServer")
 
 fun Application.installCommonFeatures(){
     install(CallId) {

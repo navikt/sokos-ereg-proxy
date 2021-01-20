@@ -3,7 +3,7 @@ package no.nav.sokos.ereg.proxy.api
 data class OrganisasjonInfo(
     val organisasjonsnummer: String,
     val organisasjonstype: String,
-    val navn: Navn?,
+    val navn: Navn,
     val forretningsadresse: Adresse?,
     val postadresse: Adresse?
 )

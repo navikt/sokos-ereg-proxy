@@ -7,12 +7,12 @@ import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
-import io.ktor.features.NotFoundException
+import io.ktor.http.HttpStatusCode.Companion.OK
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import no.nav.sokos.ereg.proxy.defaultHttpClient
-import no.nav.sokos.ereg.proxy.metrics.Metrics
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
+import no.nav.sokos.ereg.proxy.metrics.Metrics
 import org.slf4j.LoggerFactory
 
 private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.ereg.EregService")
@@ -39,14 +39,12 @@ class EregService(
         }.fold(
             onSuccess = { response ->
                 Metrics.eregCallCounter.labels("${response.status.value}").inc()
-                when (response.status.value) {
-                    200 -> validateEregResponse { response.receive() }
-                    404 -> throw NotFoundException()
-                    else -> {
-                        throw Exception(
-                            "$navCallId - Ereg returnerte statuskode ${response.status.value} " +
-                                "med melding: \"${response.receive<JsonElement>().jsonObject["melding"]}\"")
-                    }
+                when (response.status) {
+                    OK -> validateEregResponse { response.receive() }
+                    else -> throw EregException(
+                        message = response.receive<JsonElement>().jsonObject["melding"].toString(),
+                        errorCode = response.status
+                    )
                 }
             },
             onFailure = { ex ->
@@ -57,7 +55,6 @@ class EregService(
     }
 
     private inline fun validateEregResponse(block: () -> Organisasjon): Organisasjon {
-        // TODO Implement
         return try {
             block()
         } catch (e: Throwable) {
