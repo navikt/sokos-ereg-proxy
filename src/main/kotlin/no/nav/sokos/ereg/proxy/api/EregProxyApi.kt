@@ -18,8 +18,8 @@ private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.EregPr
 
 fun Application.eregProxyApi(eregService: EregService) {
     routing {
-        route("/eregproxy/api/v1") {
-            get("/organisasjon/{orgnr}") {
+        route("organisasjon-proxy/api") {
+            get("/v1/organisasjon/{orgnr}") {
                 val organisasjonsnummer = call.request.queryParameters.getOrFail("orgnr")
                 val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
                 val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""

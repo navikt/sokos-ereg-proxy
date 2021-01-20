@@ -27,7 +27,7 @@ fun Application.installCommonFeatures(){
         logger = LOGGER
         level = Level.INFO
         callIdMdc("x-correlation-id")
-        filter { call -> call.request.path().startsWith("/eregproxy") }
+        filter { call -> call.request.path().startsWith("/organisasjon-proxy") }
     }
     install(ContentNegotiation) {
         jackson {
