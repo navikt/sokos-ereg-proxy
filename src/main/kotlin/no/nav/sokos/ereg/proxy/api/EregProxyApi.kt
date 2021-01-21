@@ -2,7 +2,6 @@ package no.nav.sokos.ereg.proxy.api
 
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.response.respond
 import io.ktor.routing.get
@@ -19,8 +18,8 @@ private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.EregPr
 fun Application.eregProxyApi(eregService: EregService) {
     routing {
         route("organisasjon-proxy/api") {
-            get("/v1/organisasjon/{orgnr}") {
-                val organisasjonsnummer = call.request.queryParameters.getOrFail("orgnr")
+            get("v1/organisasjon/{orgnr}") {
+                val organisasjonsnummer = call.parameters.getOrFail("orgnr")
                 val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
                 val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""
 

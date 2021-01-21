@@ -20,7 +20,7 @@ fun main() {
     val appState = ApplicationState()
     val appConfig = Configuration()
 
-    val httpServer = HttpServer(appState, appConfig, EregService(appConfig.eregHost))
+    val httpServer = HttpServer(appState, EregService(appConfig.eregHost))
 
     httpServer.start()
 
@@ -34,18 +34,15 @@ fun main() {
 
 class HttpServer(
     appState: ApplicationState,
-    appConfig: Configuration,
     eregService: EregService,
     port: Int = 8080,
-
-    ) {
-
+) {
     private val embeddedServer = embeddedServer(Netty, port) {
+        installCommonFeatures()
         naisApi({ appState.initialized }, { appState.running })
         swaggerApi()
         metrics()
         eregProxyApi(eregService)
-        installCommonFeatures()
     }
 
     fun start() = embeddedServer.start()
