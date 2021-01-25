@@ -5,9 +5,9 @@ import no.nav.sokos.ereg.proxy.ereg.LocalDateTimeSerializer
 import java.time.LocalDateTime
 
 @Serializable
-data class OrganisasjonDetaljer (
+data class OrganisasjonDetaljer(
     @Serializable(with = LocalDateTimeSerializer::class)
-    val registreringsdato: LocalDateTime?,
-    val forretningsadresser: List<Adresse>?,
-    val postadresser: List<Adresse>?,
-    )
+    val registreringsdato: LocalDateTime? = null,
+    val forretningsadresser: List<Adresse>? = null,
+    val postadresser: List<Adresse>? = null,
+)

@@ -27,8 +27,8 @@ class EregService(
         organisasjonsnummer: String,
         inkluderHierarki: Boolean = true,
         inkluderHistorikk: Boolean = false
-    ): Organisasjon {
-        return runCatching {
+    ): Organisasjon =
+        runCatching {
             httpClient.get<HttpResponse> {
                 header("Nav-Call-Id", navCallId)
                 header("Nav-Consumer-Id", navConsumerId)
@@ -52,7 +52,6 @@ class EregService(
                 throw Exception(ex)
             }
         )
-    }
 
     private inline fun validateEregResponse(block: () -> Organisasjon): Organisasjon {
         return try {
