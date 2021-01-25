@@ -9,7 +9,7 @@ spec:
   image: {{image}}
   port: 8080
   replicas:
-    min: 1
+    min: 2
     max: 6
     cpuThresholdPercentage: 90
   resources:
@@ -21,13 +21,13 @@ spec:
       memory: 1Gi
   liveness:
     path: /internal/is_alive
-    initialDelay: 10
+    initialDelay: 5
     timeout: 5
     periodSeconds: 5
     failureThreshold: 30
   readiness:
     path: /internal/is_ready
-    initialDelay: 20
+    initialDelay: 5
     periodSeconds: 5
     timeout: 5
   prometheus:
