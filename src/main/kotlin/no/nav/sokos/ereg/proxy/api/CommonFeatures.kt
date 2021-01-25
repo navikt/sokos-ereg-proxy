@@ -25,12 +25,12 @@ fun Application.installCommonFeatures(){
         generate { UUID.randomUUID().toString() }
         verify { it.isNotEmpty() }
     }
-    install(CallLogging) {
-        logger = LOGGER
-        level = Level.INFO
-        callIdMdc("x-correlation-id")
-        filter { call -> call.request.path().startsWith("/organisasjon-proxy") }
-    }
+//    install(CallLogging) {
+//        logger = LOGGER
+//        level = Level.INFO
+//        callIdMdc("x-correlation-id")
+//        filter { call -> call.request.path().startsWith("/organisasjon-proxy") }
+//    }
     install(ContentNegotiation) {
         jackson {
             registerKotlinModule()
