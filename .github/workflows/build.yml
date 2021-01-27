@@ -45,6 +45,19 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: .nais/naiserator-q1.yaml
 
+  deploy-q2:
+    name: Deploy to dev-fss q2
+    needs: build
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/naiserator-q2.yaml
+
   deploy-prod:
     name: Deploy to prod-fss
     needs: [build, deploy-q1]
