@@ -1,7 +1,5 @@
 package no.nav.sokos.ereg.proxy.ereg.entities
 
-import kotlinx.serialization.Serializable
-
 /**
  * Informasjon om virksomhet
  *
@@ -11,7 +9,6 @@ import kotlinx.serialization.Serializable
  * @param inngaarIJuridiskEnheter Liste av hvilke(n) juridisk enhet virksomhet inng&aring;r i
  * @param bestaarAvOrganisasjonsledd Liste av hvilke organisasjonsledd virksomhet best&aring;r av
  */
-@Serializable
 data class Organisasjon(
     val navn: Navn,
     val organisasjonsnummer: String,

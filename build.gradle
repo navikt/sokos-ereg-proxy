@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.4.21'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.21'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'org.hidetake.swagger.generator' version '2.18.2'
 }
@@ -22,13 +21,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-client-apache:$ktor_version"
-    implementation "io.ktor:ktor-client-serialization:$ktor_version"
     implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-jackson:$ktor_version"
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
     implementation "io.ktor:ktor-jackson:$ktor_version"
     implementation "io.ktor:ktor-metrics-micrometer:$ktor_version"
-    implementation 'io.micrometer:micrometer-registry-prometheus:1.6.2'
+    implementation "io.micrometer:micrometer-registry-prometheus:$prometheus_version"
     implementation "io.prometheus:simpleclient_hotspot:0.9.0"
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
@@ -43,6 +41,7 @@ dependencies {
     testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+    testImplementation "io.ktor:ktor-client-tests:$ktor_version"
 
     swaggerUI "org.webjars:swagger-ui:3.38.0"
 }

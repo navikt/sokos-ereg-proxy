@@ -1,7 +1,5 @@
 package no.nav.sokos.ereg.proxy.ereg.entities
 
-import kotlinx.serialization.Serializable
-
 /**
  * Inng&aring;r i juridisk enhet
  * @param organisasjonsnummer Organisasjonsnummer
@@ -9,7 +7,6 @@ import kotlinx.serialization.Serializable
  * @param gyldighetsperiode 
  * @param navn Informasjon om organisasjonsnavn
  */
-@Serializable
 data class InngaarIJuridiskEnhet (
     val organisasjonsnummer: String,
     val navn: Navn? = null,

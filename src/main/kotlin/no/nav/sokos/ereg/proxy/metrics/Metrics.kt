@@ -57,6 +57,13 @@ object Metrics {
         .name("ereg_mapping_summary")
         .help("Ereg mapping timer")
         .register(registry.prometheusRegistry)
+
+    val serviceFaultCounter: Counter = Counter.build()
+        .namespace(NAMESPACE)
+        .name("service_fault_counter")
+        .labelNames("exception")
+        .help("Errors occurred in organisasjon API call")
+        .register(registry.prometheusRegistry)
 }
 
 fun Application.metrics() {

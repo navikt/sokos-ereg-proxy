@@ -2,9 +2,12 @@ package no.nav.sokos.ereg.proxy.api
 
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.response.header
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
@@ -26,17 +29,17 @@ fun Application.eregProxyApi(eregService: EregService) {
                 val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
                 val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""
 
+                call.response.header("Nav-Consumer-Id", navConsumerId)
+
                 try {
                     val org: Organisasjon = Metrics.eregCallSummary.cotime {
                         eregService.organisasjon(
                             navCallId,
                             navConsumerId,
-                            organisasjonsnummer,
-                            inkluderHierarki = false
+                            organisasjonsnummer
                         )
                     }
                     Metrics.eregMappingSummary.cotime {
-                        call.response.header("Nav-Consumer-Id", navConsumerId)
                         call.respond(OK, OrganisasjonInfo(
                             organisasjonsnummer = org.organisasjonsnummer,
                             organisasjonstype = org.type,
@@ -74,7 +77,19 @@ fun Application.eregProxyApi(eregService: EregService) {
                     }
                 } catch (e: EregException) {
                     LOGGER.warn("Ereg returnerte ${e.errorCode} med melding ${e.message}")
-                    call.respond(e.errorCode, TjenestefeilResponse(e.message))
+                    call.respondText(
+                        text = e.message,
+                        contentType = ContentType.Application.Json,
+                        status = e.errorCode
+                    )
+                }  catch (ex: Exception) {
+                    LOGGER.error("Det har oppstått en feil.", ex)
+                    Metrics.serviceFaultCounter.labels(ex::class.java.canonicalName).inc()
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        TjenestefeilResponse(
+                            "Det har oppstått en feil. Se log for feilmelding. (x-correlation-id: $navCallId)")
+                    )
                 }
             }
         }
@@ -84,7 +99,7 @@ fun Application.eregProxyApi(eregService: EregService) {
 private fun Organisasjon.forretningsadresse() = organisasjonDetaljer?.forretningsadresser?.get(0)
 private fun Organisasjon.postadresse() = organisasjonDetaljer?.postadresser?.get(0)
 
-inline fun <T> Summary.cotime(block: () -> T): T {
+private inline fun <T> Summary.cotime(block: () -> T): T {
     val timer = startTimer()
     val result = block()
     timer.observeDuration()

@@ -7,9 +7,9 @@ import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.readText
 import io.ktor.http.HttpStatusCode.Companion.OK
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonObject
+import kotlinx.coroutines.delay
 import no.nav.sokos.ereg.proxy.defaultHttpClient
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
 import no.nav.sokos.ereg.proxy.metrics.Metrics
@@ -17,49 +17,48 @@ import org.slf4j.LoggerFactory
 
 private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.ereg.EregService")
 
+
 class EregService(
     private val eregEndpoint: String,
     private val httpClient: HttpClient = defaultHttpClient
 ) {
+    private val delayMillis = 200L
+
     suspend fun organisasjon(
         navCallId: String,
         navConsumerId: String,
         organisasjonsnummer: String,
-        inkluderHierarki: Boolean = true,
+        inkluderHierarki: Boolean = false,
         inkluderHistorikk: Boolean = false
-    ): Organisasjon =
-        runCatching {
-            httpClient.get<HttpResponse> {
-                header("Nav-Call-Id", navCallId)
-                header("Nav-Consumer-Id", navConsumerId)
-                parameter("inkluderHistorikk", inkluderHistorikk)
-                parameter("inkluderHierarki", inkluderHierarki)
-                url("$eregEndpoint/$organisasjonsnummer")
-            }
-        }.fold(
-            onSuccess = { response ->
-                Metrics.eregCallCounter.labels("${response.status.value}").inc()
-                when (response.status) {
-                    OK -> validateEregResponse { response.receive() }
-                    else -> throw EregException(
-                        message = response.receive<JsonElement>().jsonObject["melding"].toString(),
-                        errorCode = response.status
-                    )
-                }
-            },
-            onFailure = { ex ->
-                LOGGER.error("$navCallId - Feil oppstått ved kall til Ereg: ${ex.localizedMessage}")
-                throw Exception(ex)
-            }
-        )
-
-    private inline fun validateEregResponse(block: () -> Organisasjon): Organisasjon {
-        return try {
-            block()
-        } catch (e: Throwable) {
-            Metrics.eregValidationErrorCounter.inc()
-            LOGGER.error("Feil ved mapping av Ereg-json.", e)
-            throw e
+    ): Organisasjon = retry {
+        httpClient.get<HttpResponse> {
+            header("Nav-Call-Id", navCallId)
+            header("Nav-Consumer-Id", navConsumerId)
+            parameter("inkluderHistorikk", inkluderHistorikk)
+            parameter("inkluderHierarki", inkluderHierarki)
+            url("$eregEndpoint/$organisasjonsnummer")
         }
+    }.let { response ->
+        Metrics.eregCallCounter.labels("${response.status.value}").inc()
+        when (response.status) {
+            OK -> response.receive()
+            else -> throw EregException(
+                message = response.readText(),
+                errorCode = response.status
+            )
+        }
+    }
+
+    private suspend fun <T> retry(numOfRetries: Int = 5, block: suspend () -> T): T {
+        var throwable: Throwable? = null
+        (1..numOfRetries).forEach { _ ->
+            try {
+                return block()
+            } catch (ex: Exception) {
+                throwable = ex
+                delay(delayMillis)
+            }
+        }
+        throw throwable!!
     }
 }

@@ -12,7 +12,6 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.callIdMdc
 import io.ktor.jackson.jackson
-import io.ktor.request.path
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.util.UUID
@@ -25,12 +24,11 @@ fun Application.installCommonFeatures(){
         generate { UUID.randomUUID().toString() }
         verify { it.isNotEmpty() }
     }
-//    install(CallLogging) {
-//        logger = LOGGER
-//        level = Level.INFO
-//        callIdMdc("x-correlation-id")
-//        filter { call -> call.request.path().startsWith("/organisasjon-proxy") }
-//    }
+    install(CallLogging) {
+        logger = LOGGER
+        level = Level.INFO
+        callIdMdc("x-correlation-id")
+    }
     install(ContentNegotiation) {
         jackson {
             registerKotlinModule()
