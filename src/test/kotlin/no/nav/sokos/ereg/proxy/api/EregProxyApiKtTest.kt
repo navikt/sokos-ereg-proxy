@@ -36,7 +36,7 @@ class EregProxyApiKtTest {
         } returns "ereg_response1.json".parseVirksomhet()
 
         val testCall: TestApplicationCall = withTestApplication({
-            installCommonFeatures()
+            commonFeatures()
             eregProxyApi(eregMock)
         }) {
             handleRequest(
@@ -84,7 +84,7 @@ class EregProxyApiKtTest {
         } throws EregException("{\n  \"melding\" : \"Virksomhet ikke funnet\"\n}", HttpStatusCode.NotFound)
 
         val testCall: TestApplicationCall = withTestApplication({
-            installCommonFeatures()
+            commonFeatures()
             eregProxyApi(eregMock)
         }) {
             handleRequest(
@@ -110,7 +110,7 @@ class EregProxyApiKtTest {
         } throws Exception("{\n  \"melding\" : \"Virksomhet ikke funnet\"\n}")
 
         val testCall: TestApplicationCall = withTestApplication({
-            installCommonFeatures()
+            commonFeatures()
             eregProxyApi(eregMock)
         }) {
             handleRequest(

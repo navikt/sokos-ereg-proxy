@@ -4,6 +4,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
 import java.net.URL
 
-fun String.asResource(): URL = object {}.javaClass.classLoader.getResource(this)!!
+private fun String.asResource(): URL = {}::class.java.classLoader.getResource(this)!!
+
+fun resourceToString(filename: String) = filename.asResource().readText()
 
 fun String.parseVirksomhet(): Organisasjon = jsonMapper.readValue(asResource())

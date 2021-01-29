@@ -18,7 +18,7 @@ import java.util.UUID
 
 private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.HttpServer")
 
-fun Application.installCommonFeatures(){
+fun Application.commonFeatures(){
     install(CallId) {
         header("Nav-Call-Id")
         generate { UUID.randomUUID().toString() }

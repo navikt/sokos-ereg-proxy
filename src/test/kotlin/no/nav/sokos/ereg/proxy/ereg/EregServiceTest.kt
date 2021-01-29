@@ -8,8 +8,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
-import no.nav.sokos.ereg.proxy.asResource
 import no.nav.sokos.ereg.proxy.jsonClientConfiguration
+import no.nav.sokos.ereg.proxy.resourceToString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -21,7 +21,7 @@ class EregServiceTest {
 
     @Test
     fun `Skal mappe organisasjon fra Ereg`() {
-        val eregService = mockEregService("ereg_response1.json".asResource().readText())
+        val eregService = mockEregService(resourceToString("ereg_response1.json"))
         val organisasjon = runBlocking {
             eregService.organisasjon(
                 navCallId = "TEST",
@@ -34,7 +34,7 @@ class EregServiceTest {
 
     @Test
     fun `Skal slippe igjennom feilkoder fra Ereg`() {
-        val eregService = mockEregService("ereg_notfound.json".asResource().readText(), HttpStatusCode.NotFound)
+        val eregService = mockEregService(resourceToString("ereg_notfound.json"), HttpStatusCode.NotFound)
         val exception = assertThrows<EregException> {
             runBlocking {
                 eregService.organisasjon(

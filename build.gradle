@@ -67,7 +67,7 @@ shadowJar {
 }
 
 swaggerSources {
-    ereg_proxy {
+    organisasjon_proxy {
         inputFile = file('spec/ereg-proxy_v1_002.json')
         ui {
             outputDir = file("$buildDir/resources/main/api")

@@ -5,7 +5,7 @@ import io.ktor.server.engine.stop
 import io.ktor.server.netty.Netty
 import io.prometheus.client.hotspot.DefaultExports
 import no.nav.sokos.ereg.proxy.api.eregProxyApi
-import no.nav.sokos.ereg.proxy.api.installCommonFeatures
+import no.nav.sokos.ereg.proxy.api.commonFeatures
 import no.nav.sokos.ereg.proxy.api.naisApi
 import no.nav.sokos.ereg.proxy.api.swaggerApi
 import no.nav.sokos.ereg.proxy.metrics.Metrics
@@ -38,10 +38,10 @@ class HttpServer(
     port: Int = 8080,
 ) {
     private val embeddedServer = embeddedServer(Netty, port) {
-        installCommonFeatures()
+        commonFeatures()
         naisApi({ appState.initialized }, { appState.running })
-        swaggerApi()
         metrics()
+        swaggerApi()
         eregProxyApi(eregService)
     }
 
