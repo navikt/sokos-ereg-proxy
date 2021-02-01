@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sokos-ereg-proxy-q2
+  name: sokos-ereg-proxy
   namespace: okonomi
   labels:
     team: okonomi
