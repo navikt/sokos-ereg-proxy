@@ -1,7 +1,6 @@
 package no.nav.sokos.ereg.proxy
 
 data class Configuration (
-        val appName: String = readProperty("NAIS_APP_NAME"),
         val eregHost: String = readProperty("EREG_HOSTNAME"),
 )
 

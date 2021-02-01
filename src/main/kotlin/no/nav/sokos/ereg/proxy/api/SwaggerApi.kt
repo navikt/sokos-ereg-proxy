@@ -9,11 +9,9 @@ import io.ktor.routing.routing
 
 fun Application.swaggerApi() {
     routing {
-        route("/ereg-proxy/api/v1/docs") {
-            static {
-                resources("api")
-                defaultResource("api/index.html")
-            }
+        static("/organisasjon-proxy/api/v1/docs/") {
+            resources("api")
+            defaultResource("api/index.html")
         }
     }
 }
