@@ -12,21 +12,16 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.callIdMdc
 import io.ktor.jackson.jackson
-import org.slf4j.LoggerFactory
-import org.slf4j.event.Level
 import java.util.UUID
 
-private val LOGGER = LoggerFactory.getLogger("no.nav.sokos.ereg.proxy.api.HttpServer")
 
-fun Application.commonFeatures(){
+fun Application.commonFeatures() {
     install(CallId) {
         header("Nav-Call-Id")
         generate { UUID.randomUUID().toString() }
         verify { it.isNotEmpty() }
     }
     install(CallLogging) {
-        logger = LOGGER
-        level = Level.INFO
         callIdMdc("x-correlation-id")
     }
     install(ContentNegotiation) {
