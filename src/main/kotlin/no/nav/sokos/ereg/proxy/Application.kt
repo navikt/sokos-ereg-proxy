@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 fun main() {
-    DefaultExports.initialize()
-
     val appState = ApplicationState()
     val appConfig = Configuration()
 
