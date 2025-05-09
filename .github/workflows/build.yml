@@ -29,9 +29,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - uses: gradle/actions/setup-gradle@v3
-        with:
-          dependency-graph: generate-and-submit
-      - run: ./gradlew --configuration-cache build shadowJar
+      - run: ./gradlew build shadowJar
       - name: Push docker image to Google Artifact Registry
         uses: nais/docker-build-push@v0
         id: docker-build-push
