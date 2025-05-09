@@ -5,68 +5,78 @@ on:
     branches:
       - dev
       - main
+    paths-ignore:
+      - '.github/workflows/alerts.yaml'
+      - '.nais/alerterator.yaml'
+      - '**.md'
+  workflow_dispatch:
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/sokos-ereg-proxy:${{ github.sha }}
+  TZ: Europe/Oslo
+
+permissions:
+  contents: "write"
+  id-token: "write"
 
 jobs:
   build:
-    name: Build and push Docker container
+    name: Build/test & push image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: '15.x'
-      - name: Test and build
-        run: ./gradlew test shadowJar
-        env:
-          ORG_GRADLE_PROJECT_githubUser: x-access-token
-          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and publish Docker image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build --tag ${IMAGE} .
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-          docker push ${IMAGE}
+          distribution: 'temurin'
+          java-version: '11'
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          dependency-graph: generate-and-submit
+      - run: ./gradlew --configuration-cache build shadowJar
+      - name: Push docker image to Google Artifact Registry
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: okonomi
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          tag: latest
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
 
-  deploy-q1:
-    name: Deploy to dev-fss q1
+  deploy-dev:
+    name: Deploy to dev-fss
     needs: build
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          IMAGE: ${{ needs.build.outputs.image }}
           CLUSTER: dev-fss
           RESOURCE: .nais/naiserator-q1.yaml
 
   deploy-q2:
-    name: Deploy to dev-fss q2
+    name: Deploy to dev-fss
     needs: build
-    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          IMAGE: ${{ needs.build.outputs.image }}
           CLUSTER: dev-fss
           RESOURCE: .nais/naiserator-q2.yaml
 
+
   deploy-prod:
     name: Deploy to prod-fss
-    needs: [build, deploy-q1]
+    needs: [build, deploy-dev]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          IMAGE: ${{ needs.build.outputs.image }}
           CLUSTER: prod-fss
           RESOURCE: .nais/naiserator-prod.yaml
