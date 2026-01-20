@@ -33,7 +33,7 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
                     response,
                 )
             } catch (e: EregException) {
-                logger.error("Ereg returnerte ${e.errorCode} med melding ${e.message}")
+                logger.info { e.message }
                 call.respondText(
                     text = e.message,
                     contentType = ContentType.Application.Json,
