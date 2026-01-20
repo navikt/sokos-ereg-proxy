@@ -43,6 +43,7 @@ spec:
       rules:
         - application: logging
           namespace: nais-system
+  webproxy: true
 
   env:
     - name: EREG_URL
