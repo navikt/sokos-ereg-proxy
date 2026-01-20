@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.header
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
@@ -13,6 +12,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.util.getOrFail
 import mu.KotlinLogging
 
+import no.nav.sokos.ereg.proxy.config.TEAM_LOGS_MARKER
 import no.nav.sokos.ereg.proxy.ereg.EregClientService
 import no.nav.sokos.ereg.proxy.ereg.EregException
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
@@ -23,35 +23,29 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
     route("organisasjon-proxy/api") {
         get("v1/organisasjon/{orgnr}") {
             val organisasjonsnummer = call.parameters.getOrFail("orgnr")
-            val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
-            val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""
-
-            call.response.header("Nav-Consumer-Id", navConsumerId)
 
             try {
                 val org =
                     eregClientService.hentOrganisasjon(
-                        navCallId,
-                        navConsumerId,
                         organisasjonsnummer,
                     )
                 val response = mapOrganisasjonToResponse(org)
                 call.respond(
                     response,
                 )
-            } catch (e: EregException) {
-                logger.error("Ereg returnerte ${e.errorCode} med melding ${e.message}")
+            } catch (eregException: EregException) {
+                logger.info(marker = TEAM_LOGS_MARKER) { eregException.message }
                 call.respondText(
-                    text = e.message,
+                    text = eregException.message,
                     contentType = ContentType.Application.Json,
-                    status = e.errorCode,
+                    status = eregException.errorCode,
                 )
-            } catch (ex: Exception) {
-                logger.error("Det har oppstått en feil.", ex)
+            } catch (exception: Exception) {
+                logger.error(marker = TEAM_LOGS_MARKER, exception) { "Det har oppstått en feil." }
                 call.respond(
                     HttpStatusCode.InternalServerError,
                     TjenestefeilResponse(
-                        "Det har oppstått en feil. Se log for feilmelding. (x-correlation-id: $navCallId)",
+                        "Det har oppstått en feil. Se log for feilmelding.",
                     ),
                 )
             }

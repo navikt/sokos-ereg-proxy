@@ -47,4 +47,4 @@ spec:
 
   env:
     - name: EREG_URL
-      value: "https://modapp-q2.adeo.no"
+      value: "https://ereg-services-q1.intern.dev.nav.no"
