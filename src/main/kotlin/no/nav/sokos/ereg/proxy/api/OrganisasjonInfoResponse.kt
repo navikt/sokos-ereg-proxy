@@ -1,22 +1,27 @@
 package no.nav.sokos.ereg.proxy.api
 
-data class OrganisasjonInfo(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class OrganisasjonInfoResponse(
     val organisasjonsnummer: String,
     val organisasjonstype: String,
     val navn: Navn,
     val forretningsadresse: Adresse?,
-    val postadresse: Adresse?
+    val postadresse: Adresse?,
 )
 
+@Serializable
 data class Navn(
     val navnelinje1: String?,
     val navnelinje2: String?,
     val navnelinje3: String?,
     val navnelinje4: String?,
     val navnelinje5: String?,
-    val redigertnavn: String?
+    val redigertnavn: String?,
 )
 
+@Serializable
 data class Adresse(
     val adresselinje1: String?,
     val adresselinje2: String?,
@@ -24,9 +29,5 @@ data class Adresse(
     val kommunenummer: String?,
     val landkode: String?,
     val postnummer: String?,
-    val poststed: String?
-)
-
-data class TjenestefeilResponse(
-    val melding: String
+    val poststed: String?,
 )

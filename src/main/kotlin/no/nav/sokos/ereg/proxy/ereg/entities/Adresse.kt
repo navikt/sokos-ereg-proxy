@@ -1,5 +1,8 @@
 package no.nav.sokos.ereg.proxy.ereg.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Adresse(
     val adresselinje1: String? = null,
     val adresselinje2: String? = null,
@@ -11,4 +14,3 @@ data class Adresse(
     val bruksperiode: Bruksperiode? = null,
     val gyldighetsperiode: Gyldighetsperiode? = null,
 )
-

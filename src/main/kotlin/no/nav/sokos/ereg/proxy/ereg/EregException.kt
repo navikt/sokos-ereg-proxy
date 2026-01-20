@@ -5,4 +5,4 @@ import io.ktor.http.HttpStatusCode
 class EregException(
     override val message: String,
     val errorCode: HttpStatusCode,
-): Exception(message)
+) : Exception(message)

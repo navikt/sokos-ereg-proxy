@@ -1,79 +1,22 @@
 package no.nav.sokos.ereg.proxy.metrics
 
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.metrics.micrometer.MicrometerMetrics
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.route
-import io.ktor.routing.routing
-import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
-import io.micrometer.core.instrument.binder.system.ProcessorMetrics
-import io.micrometer.core.instrument.binder.system.UptimeMetrics
-import io.micrometer.prometheus.PrometheusConfig
-import io.micrometer.prometheus.PrometheusMeterRegistry
-import io.prometheus.client.Counter
-import io.prometheus.client.Summary
+import io.micrometer.prometheusmetrics.PrometheusConfig
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
+import io.prometheus.metrics.core.metrics.Counter
 
-private const val NAMESPACE = "sokos_ereg_proxy"
+private const val METRICS_NAMESPACE = "sokos_ereg_proxy"
+
+private const val EREG_CALL_COUNTER = "${METRICS_NAMESPACE}_ereg_call_counter"
 
 object Metrics {
-    val registry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
+    val prometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
-    val appStateRunningFalse: Counter = Counter.build()
-        .namespace(NAMESPACE)
-        .name("app_state_running_false")
-        .help("app state running changed to false")
-        .register(registry.prometheusRegistry)
-
-    val appStateReadyFalse: Counter = Counter.build()
-        .namespace(NAMESPACE)
-        .name("app_state_ready_false")
-        .help("app state ready changed to false")
-        .register(registry.prometheusRegistry)
-
-    val eregCallCounter: Counter = Counter.build()
-        .namespace(NAMESPACE)
-        .name("ereg_call_counter")
-        .labelNames("responseCode")
-        .help("Counts calls to ereg with response status code")
-        .register(registry.prometheusRegistry)
-
-    val eregCallSummary: Summary = Summary.build()
-        .namespace(NAMESPACE)
-        .name("ereg_call_summary")
-        .help("Ereg kall timer")
-        .register(registry.prometheusRegistry)
-
-    val eregMappingSummary: Summary = Summary.build()
-        .namespace(NAMESPACE)
-        .name("ereg_mapping_summary")
-        .help("Ereg mapping timer")
-        .register(registry.prometheusRegistry)
-
-    val serviceFaultCounter: Counter = Counter.build()
-        .namespace(NAMESPACE)
-        .name("service_fault_counter")
-        .labelNames("exception")
-        .help("Errors occurred in organisasjon API call")
-        .register(registry.prometheusRegistry)
-}
-
-fun Application.metrics() {
-    install(MicrometerMetrics) {
-        registry = Metrics.registry
-        meterBinders = listOf(
-            JvmMemoryMetrics(),
-            ProcessorMetrics(),
-            UptimeMetrics()
-        )
-    }
-    routing {
-        route("metrics") {
-            get {
-                call.respond(Metrics.registry.scrape())
-            }
-        }
-    }
+    val eregCallCounter: Counter =
+        Counter
+            .builder()
+            .name(EREG_CALL_COUNTER)
+            .help("Counts calls to Ereg with response status code")
+            .withoutExemplars()
+            .labelNames("responseCode")
+            .register(prometheusMeterRegistry.prometheusRegistry)
 }
