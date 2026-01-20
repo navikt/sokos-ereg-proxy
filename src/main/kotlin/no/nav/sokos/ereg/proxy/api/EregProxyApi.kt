@@ -12,6 +12,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.util.getOrFail
 import mu.KotlinLogging
 
+import no.nav.sokos.ereg.proxy.config.TEAM_LOGS_MARKER
 import no.nav.sokos.ereg.proxy.ereg.EregClientService
 import no.nav.sokos.ereg.proxy.ereg.EregException
 import no.nav.sokos.ereg.proxy.ereg.entities.Organisasjon
@@ -32,15 +33,15 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
                 call.respond(
                     response,
                 )
-            } catch (e: EregException) {
-                logger.info { e.message }
+            } catch (eregException: EregException) {
+                logger.info(marker = TEAM_LOGS_MARKER) { eregException.message }
                 call.respondText(
-                    text = e.message,
+                    text = eregException.message,
                     contentType = ContentType.Application.Json,
-                    status = e.errorCode,
+                    status = eregException.errorCode,
                 )
-            } catch (ex: Exception) {
-                logger.error("Det har oppstått en feil.", ex)
+            } catch (exception: Exception) {
+                logger.error(marker = TEAM_LOGS_MARKER, exception) { "Det har oppstått en feil." }
                 call.respond(
                     HttpStatusCode.InternalServerError,
                     TjenestefeilResponse(
