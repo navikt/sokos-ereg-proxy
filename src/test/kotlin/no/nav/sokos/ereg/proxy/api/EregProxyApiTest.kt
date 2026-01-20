@@ -171,7 +171,7 @@ internal class EregProxyApiTest :
             val expectedResponse =
                 """
                 {
-                  "melding" : "Det har oppstått en feil. Se log for feilmelding. (x-correlation-id: 1233210)"
+                  "melding" : "Det har oppstått en feil. Se log for feilmelding."
                 }
                 """.trimIndent()
 

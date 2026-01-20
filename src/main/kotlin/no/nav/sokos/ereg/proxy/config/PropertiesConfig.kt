@@ -30,10 +30,10 @@ object PropertiesConfig {
 
     private val config =
         when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
-            "dev-gcp" ->
+            "dev-fss" ->
                 ConfigurationProperties.systemProperties() overriding EnvironmentVariables() overriding devProperties overriding
                     defaultProperties
-            "prod-gcp" ->
+            "prod-fss" ->
                 ConfigurationProperties.systemProperties() overriding EnvironmentVariables() overriding prodProperties overriding
                     defaultProperties
             else ->

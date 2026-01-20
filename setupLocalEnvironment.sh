@@ -1,17 +1,29 @@
 #!/bin/bash
 
-# Ensure user is authenicated, and run login if not.
+# Ensure user is authenticated, and run login if not.
 gcloud auth print-identity-token &> /dev/null
 if [ $? -gt 0 ]; then
     gcloud auth login
 fi
+
+# Suppress kubectl config output
 kubectl config use-context dev-fss
 kubectl config set-context --current --namespace=okonomi
 
+# Get pod name
+POD_NAME=$(kubectl get pods --no-headers | grep sokos-ereg-proxy-q1 | head -n1 | awk '{print $1}')
+
+if [ -z "$POD_NAME" ]; then
+    echo "Error: No sokos-ereg-proxy-q1 pod found" >&2
+    exit 1
+fi
+
+echo "Fetching environment variables from pod: $POD_NAME"
+
 # Get AZURE system variables
-envValue=$(kubectl exec -it $(kubectl get pods | grep sokos-oppdrag | cut -f1 -d' ') -c sokos-oppdrag -- env | egrep "EREG_URL" | sort)
+envValue=$(kubectl exec "$POD_NAME" -c sokos-ereg-proxy-q1 -- env | egrep "EREG_URL" | sort)
 
 # Set AZURE as local environment variables
 rm -f defaults.properties
 echo "$envValue" > defaults.properties
-echo "AZURE stores as defaults.properties"
+echo "Environment variables saved to defaults.properties"
