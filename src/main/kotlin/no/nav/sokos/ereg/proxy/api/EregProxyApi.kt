@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.header
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
@@ -23,16 +22,10 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
     route("organisasjon-proxy/api") {
         get("v1/organisasjon/{orgnr}") {
             val organisasjonsnummer = call.parameters.getOrFail("orgnr")
-            val navCallId = call.request.headers["Nav-Call-Id"] ?: ""
-            val navConsumerId = call.request.headers["Nav-Consumer-Id"] ?: ""
-
-            call.response.header("Nav-Consumer-Id", navConsumerId)
 
             try {
                 val org =
                     eregClientService.hentOrganisasjon(
-                        navCallId,
-                        navConsumerId,
                         organisasjonsnummer,
                     )
                 val response = mapOrganisasjonToResponse(org)
@@ -51,7 +44,7 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
                 call.respond(
                     HttpStatusCode.InternalServerError,
                     TjenestefeilResponse(
-                        "Det har oppstått en feil. Se log for feilmelding. (x-correlation-id: $navCallId)",
+                        "Det har oppstått en feil. Se log for feilmelding.",
                     ),
                 )
             }

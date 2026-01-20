@@ -45,8 +45,6 @@ internal class EregClientServiceTest :
 
             val response =
                 eregClientService.hentOrganisasjon(
-                    navCallId = "callId",
-                    navConsumerId = "navConsumerId",
                     organisasjonsnummer = ORG_NNUMMER,
                 )
 
@@ -71,8 +69,6 @@ internal class EregClientServiceTest :
             val exception =
                 assertThrows<EregException> {
                     eregClientService.hentOrganisasjon(
-                        navCallId = "TEST",
-                        navConsumerId = "teste",
                         organisasjonsnummer = ORG_NNUMMER,
                     )
                 }

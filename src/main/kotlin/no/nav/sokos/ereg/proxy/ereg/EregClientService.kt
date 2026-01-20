@@ -7,7 +7,6 @@ import kotlinx.serialization.json.Json
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
@@ -25,8 +24,6 @@ class EregClientService(
     private val client: HttpClient = httpClient,
 ) {
     suspend fun hentOrganisasjon(
-        navCallId: String,
-        navConsumerId: String,
         organisasjonsnummer: String,
         inkluderHierarki: Boolean = false,
         inkluderHistorikk: Boolean = false,
@@ -34,8 +31,6 @@ class EregClientService(
         logger.info { "Henter organisasjonsnavn for $organisasjonsnummer fra Ereg." }
         val response =
             client.get("$eregUrl/ereg/api/v1/organisasjon/$organisasjonsnummer") {
-                header("Nav-Call-Id", navCallId)
-                header("Nav-Consumer-Id", navConsumerId)
                 parameter("inkluderHistorikk", inkluderHistorikk)
                 parameter("inkluderHierarki", inkluderHierarki)
             }
