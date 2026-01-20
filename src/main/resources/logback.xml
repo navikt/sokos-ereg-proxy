@@ -1,18 +1,38 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<configuration debug="true">
-
-    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    </appender>
+<configuration>
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%-20.20logger{19}) %cyan(:) %m%n</pattern>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%logger{36}) %cyan(:) %m%n
+            </pattern>
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="stdout_json"/>
-    </root>
+    <appender name="default-json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>TEAM_LOGS</marker>
+            </evaluator>
+            <OnMatch>DENY</OnMatch>
+            <OnMismatch>ACCEPT</OnMismatch>
+        </filter>
+    </appender>
+
+    <if condition='isDefined("NAIS_CLUSTER_NAME")'>
+        <then>
+            <root level="INFO">
+                <appender-ref ref="${LOG_APPENDER:-default-json}"/>
+            </root>
+        </then>
+        <else>
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </else>
+    </if>
+
+    <logger name="no.nav.sokos.ereg.proxy" level="INFO"/>
 
 </configuration>

@@ -1,17 +1,11 @@
 package no.nav.sokos.ereg.proxy.api
 
-import io.ktor.application.Application
-import io.ktor.http.content.defaultResource
-import io.ktor.http.content.resources
-import io.ktor.http.content.static
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.server.plugins.swagger.swaggerUI
+import io.ktor.server.routing.Route
 
-fun Application.swaggerApi() {
-    routing {
-        static("/organisasjon-proxy/api/v1/docs/") {
-            resources("api")
-            defaultResource("api/index.html")
-        }
-    }
+fun Route.swaggerApi() {
+    swaggerUI(
+        "/organisasjon-proxy/api/v1/docs",
+        "openapi/ereg-proxy_v1_002.json",
+    )
 }

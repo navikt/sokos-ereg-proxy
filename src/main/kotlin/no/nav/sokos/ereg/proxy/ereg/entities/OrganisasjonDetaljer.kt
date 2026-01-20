@@ -1,7 +1,9 @@
 package no.nav.sokos.ereg.proxy.ereg.entities
 
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OrganisasjonDetaljer(
     val registreringsdato: LocalDateTime? = null,
     val forretningsadresser: List<Adresse>? = null,

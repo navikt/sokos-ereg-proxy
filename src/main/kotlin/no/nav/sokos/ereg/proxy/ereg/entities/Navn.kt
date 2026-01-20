@@ -1,5 +1,7 @@
 package no.nav.sokos.ereg.proxy.ereg.entities
 
+import kotlinx.serialization.Serializable
+
 /**
  * Informasjon om organisasjonsnavn
  *
@@ -12,6 +14,8 @@ package no.nav.sokos.ereg.proxy.ereg.entities
  * @param navnelinje5 Navnelinje #5
  * @param redigertnavn Redigert navn
  */
+
+@Serializable
 data class Navn(
     val bruksperiode: Bruksperiode? = null,
     val gyldighetsperiode: Gyldighetsperiode? = null,
@@ -20,5 +24,5 @@ data class Navn(
     val navnelinje3: String? = null,
     val navnelinje4: String? = null,
     val navnelinje5: String? = null,
-    val redigertnavn: String? = null
+    val redigertnavn: String? = null,
 )
