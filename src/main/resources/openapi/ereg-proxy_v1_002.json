@@ -17,6 +17,7 @@
     }
   ],
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
