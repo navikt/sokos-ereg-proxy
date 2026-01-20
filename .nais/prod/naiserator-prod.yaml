@@ -31,6 +31,7 @@ spec:
       memory: 512Mi
   ingresses:
     - https://sokos-ereg-proxy.nais.adeo.no
+    - https://sokos-ereg-proxy.intern.nav.no
   prometheus:
     enabled: true
     path: /internal/metrics
