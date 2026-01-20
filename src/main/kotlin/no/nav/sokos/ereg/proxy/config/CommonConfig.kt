@@ -30,7 +30,7 @@ fun Application.commonConfig() {
     install(CallLogging) {
         logger = no.nav.sokos.ereg.proxy.config.logger
         level = Level.INFO
-        filter { call -> call.request.path().startsWith("/api") }
+        filter { call -> call.request.path().startsWith("organisasjon-proxy/api") }
         disableDefaultColors()
     }
     install(ContentNegotiation) {
