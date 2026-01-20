@@ -20,10 +20,10 @@ fi
 
 echo "Fetching environment variables from pod: $POD_NAME"
 
-# Get AZURE system variables
+# Get system variables
 envValue=$(kubectl exec "$POD_NAME" -c sokos-ereg-proxy-q1 -- env | egrep "EREG_URL" | sort)
 
-# Set AZURE as local environment variables
+# Set local environment variables
 rm -f defaults.properties
 echo "$envValue" > defaults.properties
 echo "Environment variables saved to defaults.properties"
