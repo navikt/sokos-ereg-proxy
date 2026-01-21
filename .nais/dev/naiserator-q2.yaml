@@ -30,7 +30,6 @@ spec:
       cpu: 100m
       memory: 512Mi
   ingresses:
-    - https://sokos-ereg-proxy-q2.dev.adeo.no
     - https://sokos-ereg-proxy-q2.intern.dev.nav.no
   prometheus:
     enabled: true

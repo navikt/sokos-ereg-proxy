@@ -2,10 +2,8 @@ package no.nav.sokos.ereg.proxy.api
 
 import kotlinx.serialization.Serializable
 
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
@@ -35,10 +33,9 @@ fun Route.eregProxyApi(eregClientService: EregClientService = EregClientService(
                 )
             } catch (eregException: EregException) {
                 logger.info(marker = TEAM_LOGS_MARKER) { eregException.message }
-                call.respondText(
-                    text = eregException.message,
-                    contentType = ContentType.Application.Json,
-                    status = eregException.errorCode,
+                call.respond(
+                    eregException.errorCode,
+                    TjenestefeilResponse(eregException.message),
                 )
             } catch (exception: Exception) {
                 logger.error(marker = TEAM_LOGS_MARKER, exception) { "Det har oppstått en feil." }

@@ -104,11 +104,7 @@ internal class EregProxyApiTest :
                 eregClientService.hentOrganisasjon(any(), any(), any())
             } throws
                 EregException(
-                    """
-                    {
-                      "melding" : "Virksomhet ikke funnet"
-                    }
-                    """.trimIndent(),
+                    "Virksomhet ikke funnet",
                     HttpStatusCode.NotFound,
                 )
 

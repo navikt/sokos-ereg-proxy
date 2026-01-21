@@ -1,6 +1,5 @@
 package no.nav.sokos.ereg.proxy.ereg
 
-import kotlin.inc
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -36,9 +35,8 @@ class EregClientService(
         return when {
             response.status.isSuccess() -> response.body<Organisasjon>()
             else -> {
-                val errorResponse = Json.decodeFromString<ErrorResponse>(response.bodyAsText())
                 throw EregException(
-                    message = errorResponse.melding,
+                    message = Json.decodeFromString<ErrorResponse>(response.bodyAsText()).melding,
                     errorCode = response.status,
                 )
             }
