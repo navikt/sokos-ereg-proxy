@@ -6,6 +6,7 @@ import com.atlassian.oai.validator.restassured.OpenApiValidationFilter
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.engine.EmbeddedServer
@@ -32,8 +33,6 @@ private val validationFilter = OpenApiValidationFilter("openapi/ereg-proxy_v1_00
 private val eregClientService = mockk<EregClientService>()
 
 private const val ORG_NR = "889640782"
-private const val CONSUMER_ID = "132512"
-private const val CALL_ID = "1233210"
 
 internal class EregProxyApiTest :
     FunSpec({
@@ -58,8 +57,7 @@ internal class EregProxyApiTest :
                 RestAssured
                     .given()
                     .filter(validationFilter)
-                    .header("Nav-Call-Id", CALL_ID)
-                    .header("Nav-Consumer-Id", CONSUMER_ID)
+                    .header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     .port(PORT)
                     .get("/organisasjon-proxy/api/v1/organisasjon/$ORG_NR")
                     .then()
@@ -112,8 +110,7 @@ internal class EregProxyApiTest :
                 RestAssured
                     .given()
                     .filter(validationFilter)
-                    .header("Nav-Call-Id", CALL_ID)
-                    .header("Nav-Consumer-Id", CONSUMER_ID)
+                    .header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     .port(PORT)
                     .get("/organisasjon-proxy/api/v1/organisasjon/$ORG_NR")
                     .then()
@@ -151,8 +148,7 @@ internal class EregProxyApiTest :
                 RestAssured
                     .given()
                     .filter(validationFilter)
-                    .header("Nav-Call-Id", CALL_ID)
-                    .header("Nav-Consumer-Id", CONSUMER_ID)
+                    .header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     .port(PORT)
                     .get("/organisasjon-proxy/api/v1/organisasjon/$ORG_NR")
                     .then()
