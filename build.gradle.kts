@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "3.3.3"
+val ktorVersion = "3.4.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val logbackVersion = "1.5.24"
 val logstashVersion = "9.0"
@@ -42,7 +42,7 @@ dependencies {
 
     // Ktor client
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache5-jvm:$ktorVersion")
 
     // Date and time handling
     implementation("org.jetbrains.kotlinx:kotlinx-datetime-jvm:$kotlinxDatetimeVersion")

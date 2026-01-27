@@ -1,7 +1,6 @@
 package no.nav.sokos.ereg.proxy.ereg
 
 import kotlin.getValue
-import kotlin.test.assertNotNull
 
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -10,6 +9,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.okJson
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.ktor.http.HttpStatusCode
 import org.junit.jupiter.api.assertThrows
 
@@ -48,7 +48,7 @@ internal class EregClientServiceTest :
                     organisasjonsnummer = ORG_NNUMMER,
                 )
 
-            assertNotNull(response)
+            response shouldNotBe null
         }
 
         test("Skal slippe igjennom feilkoder fra Ereg") {
