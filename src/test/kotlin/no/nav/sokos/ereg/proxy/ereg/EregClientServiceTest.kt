@@ -7,11 +7,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.okJson
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.ktor.http.HttpStatusCode
-import org.junit.jupiter.api.assertThrows
 
 import no.nav.sokos.ereg.proxy.TestUtil.readFromResource
 import no.nav.sokos.ereg.proxy.listener.WiremockListener
@@ -67,7 +67,7 @@ internal class EregClientServiceTest :
             )
 
             val exception =
-                assertThrows<EregException> {
+                shouldThrow<EregException> {
                     eregClientService.hentOrganisasjon(
                         organisasjonsnummer = ORG_NNUMMER,
                     )
