@@ -28,6 +28,14 @@ import no.nav.sokos.ereg.proxy.metrics.Metrics
 val TEAM_LOGS_MARKER = MarkerFactory.getMarker("TEAM_LOGS")
 private val logger = KotlinLogging.logger {}
 
+val json =
+    Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        explicitNulls = false
+    }
+
 fun Application.commonConfig() {
     install(CallLogging) {
         logger = no.nav.sokos.ereg.proxy.config.logger
@@ -36,14 +44,7 @@ fun Application.commonConfig() {
         disableDefaultColors()
     }
     install(ContentNegotiation) {
-        json(
-            Json {
-                prettyPrint = true
-                ignoreUnknownKeys = true
-                encodeDefaults = true
-                explicitNulls = false
-            },
-        )
+        json(json)
     }
     install(MicrometerMetrics) {
         registry = Metrics.prometheusMeterRegistry

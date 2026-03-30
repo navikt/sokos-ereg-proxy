@@ -89,9 +89,9 @@ fun mapOrganisasjonToResponse(organisasjon: Organisasjon): OrganisasjonInfoRespo
             },
     )
 
-private fun Organisasjon.forretningsadresse() = organisasjonDetaljer?.forretningsadresser?.get(0)
+private fun Organisasjon.forretningsadresse() = organisasjonDetaljer?.forretningsadresser?.firstOrNull()
 
-private fun Organisasjon.postadresse() = organisasjonDetaljer?.postadresser?.get(0)
+private fun Organisasjon.postadresse() = organisasjonDetaljer?.postadresser?.firstOrNull()
 
 @Serializable
 data class TjenestefeilResponse(
