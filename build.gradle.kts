@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "3.4.2"
+val ktorVersion = "3.4.3"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val logbackVersion = "1.5.32"
 val logstashVersion = "9.0"
