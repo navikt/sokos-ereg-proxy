@@ -81,26 +81,10 @@ configurations.all {
                 useVersion("3.1.1")
                 because("Jackson Core: Document length constraint bypass in blocking, async, and DataInput parsers. Affected version >= 3.0.0, <= 3.1.0")
             }
-            if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-core") {
-                useVersion("2.21.1")
-                because("jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition. Affected version >= 2.19.0, < 2.21.1")
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-codec-http") {
-                useVersion("4.2.13.Final")
+            if (requested.group == "io.netty" && requested.name.startsWith("netty-")) {
+                useVersion("4.2.15.Final")
                 because(
-                    "CVE-2026-42587: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.13.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-transport-native-epoll") {
-                useVersion("4.2.13.Final")
-                because(
-                    "Netty's epoll transport fails to detect and close TCP connections that receive a RST after being half-closed, leading to stale channels that are never cleaned up and, in some code paths, a 100% CPU busy-loop in the event loop thread. Affected version = 4.2.11.Final, patched in >= 4.2.13.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-codec-http2") {
-                useVersion("4.2.13.Final")
-                because(
-                    "CVE-2026-42587: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.13.Final",
+                    "Consolidate all Netty packages to 4.2.15.Final to fix CVE-2026-44249, CVE-2026-45416 (netty-handler) and CVE-2026-42587 (netty decompressor). Affected versions: 4.2.11.Final - 4.2.14.Final, patched in >= 4.2.15.Final",
                 )
             }
         }
