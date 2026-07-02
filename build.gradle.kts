@@ -77,15 +77,25 @@ dependencies {
 configurations.all {
     resolutionStrategy {
         eachDependency {
-            if (requested.group == "tools.jackson.core" && requested.name == "jackson-core") {
-                useVersion("3.1.1")
-                because("Jackson Core: Document length constraint bypass in blocking, async, and DataInput parsers. Affected version >= 3.0.0, <= 3.1.0")
-            }
-            if (requested.group == "io.netty" && requested.name.startsWith("netty-")) {
+            if (requested.group == "io.netty") {
                 useVersion("4.2.15.Final")
-                because(
-                    "Consolidate all Netty packages to 4.2.15.Final to fix CVE-2026-44249, CVE-2026-45416 (netty-handler) and CVE-2026-42587 (netty decompressor). Affected versions: 4.2.11.Final - 4.2.14.Final, patched in >= 4.2.15.Final",
-                )
+                because("Multiple versions of netty has vulnerable dependencies. Affected version < 4.2.15.Final")
+            }
+            if (requested.group == "tools.jackson.core" && requested.name == "jackson-databind") {
+                useVersion("3.2.0")
+                because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version < >= 3.0.0, <= 3.1.3")
+            }
+            if (requested.group == "tools.jackson.core" && requested.name == "jackson-core") {
+                useVersion("3.2.0")
+                because("Multiple versions of jackson-core has vulnerable dependencies. Affected version >= 3.0.0, <= 3.1.0")
+            }
+            if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-databind") {
+                useVersion("2.21.4")
+                because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 2.19.0, <= 2.21.3")
+            }
+            if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-core") {
+                useVersion("2.21.4")
+                because("Multiple versions of jackson-core has vulnerable dependencies.. Affected version >= 2.19.0, <= 2.21.1")
             }
         }
     }
