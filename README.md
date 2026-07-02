@@ -37,7 +37,7 @@ For å kjøre applikasjonen lokalt må du gjøre følgende:
   chmod 755 setupLocalEnvironment.sh && ./setupLocalEnvironment.sh
   ```
   Denne vil opprette [default.properties](defaults.properties) med alle environment variabler du trenger for å kjøre
-  applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/spk/mottak/config/PropertiesConfig.kt).
+  applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/ereg/proxy/config/PropertiesConfig.kt).
 
 # 4. Programvarearkitektur
 
@@ -74,18 +74,18 @@ Sensitive meldinger logges til [Team Logs](https://doc.nais.io/observability/log
 
 ### Kubectl
 
-For dev-gcp:
+For dev-fss:
 
 ```shell script
-kubectl config use-context dev-gcp
+kubectl config use-context dev-fss
 kubectl get pods -n okonomi | grep sokos-ereg-proxy
 kubectl logs -f sokos-ereg-proxy-<POD-ID> --namespace okonomi -c sokos-ereg-proxy
 ```
 
-For prod-gcp:
+For prod-fss:
 
 ```shell script
-kubectl config use-context prod-gcp
+kubectl config use-context prod-fss
 kubectl get pods -n okonomi | grep sokos-ereg-proxy
 kubectl logs -f sokos-ereg-proxy-<POD-ID> --namespace okonomi -c sokos-ereg-proxy
 ```
