@@ -6,7 +6,7 @@ plugins {
     kotlin("jvm") version "2.4.20"
     kotlin("plugin.serialization") version "2.4.20"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.9"
+    id("org.jetbrains.kotlinx.kover") version "0.9.10"
 
     application
 }
@@ -19,14 +19,14 @@ repositories {
 
 val ktorVersion = "3.5.2"
 val kotlinxDatetimeVersion = "0.8.0-0.6.x-compat"
-val logbackVersion = "1.6.3"
+val logbackVersion = "1.6.4"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.17.1"
 val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.2.4"
+val kotestVersion = "6.2.5"
 val kotlinxSerializationVersion = "1.11.0"
-val mockOAuth2ServerVersion = "6.0.2"
+val mockOAuth2ServerVersion = "6.0.3"
 val mockkVersion = "1.14.11"
 val swaggerRequestValidatorVersion = "3.0.0"
 val wiremockVersion = "3.13.2"
