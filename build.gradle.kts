@@ -70,35 +70,21 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:$mockOAuth2ServerVersion")
     testImplementation("org.wiremock:wiremock:$wiremockVersion")
     testImplementation("com.atlassian.oai:swagger-request-validator-restassured:$swaggerRequestValidatorVersion")
-}
 
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            if (requested.group == "io.netty" && requested.name == "netty-codec-http") {
-                useVersion("4.2.17.Final")
-                because("Cache Poisoning and Information Disclosure via CORS Vary Header Overwrite. Affected version < 4.2.17.Final")
-            }
-            if (requested.group == "tools.jackson.core" && requested.name == "jackson-databind") {
-                useVersion("3.2.3")
-                because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 3.2.0, <= 3.2.2")
-            }
-            if (requested.group == "tools.jackson.core" && requested.name == "jackson-core") {
-                useVersion("3.2.3")
-                because("Multiple versions of jackson-core has vulnerable dependencies. Affected version >= 3.2.0, <= 3.2.1")
-            }
-            if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-databind") {
-                useVersion("2.22.3")
-                because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 2.22.0, < 2.22.2")
-            }
-            if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-core") {
-                useVersion("2.22.3")
-                because("Multiple versions of jackson-core has vulnerable dependencies. Affected version >= 2.22.0, <= 2.22.2")
-            }
-            if (requested.group == "org.apache.httpcomponents.client5" && requested.name == "httpclient5") {
-                useVersion("5.6.3")
-                because("Multiple versions of httpclient5 has vulnerable dependencies. Affected version >= 5.0-alpha1, < 5.6.3")
-            }
+    // Sårbarheter
+    implementation(platform("io.netty:netty-bom:4.2.19.Final")) {
+        because("Align Netty modules on a patched release")
+    }
+
+    constraints {
+        implementation("tools.jackson.core:jackson-databind:3.2.3") {
+            because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 3.2.0, <= 3.2.2")
+        }
+        testImplementation("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
+            because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 2.22.0, < 2.22.2")
+        }
+        testImplementation("com.google.guava:guava:33.7.2-jre") {
+            because("GHSA-xxph-c9ww-hj94 affects Guava versions before 33.7.2")
         }
     }
 }
