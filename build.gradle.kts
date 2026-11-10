@@ -26,7 +26,7 @@ val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
 val kotestVersion = "6.2.6"
 val kotlinxSerializationVersion = "1.12.0"
-val mockOAuth2ServerVersion = "6.1.3"
+val mockOAuth2ServerVersion = "6.1.4"
 val mockkVersion = "1.14.11"
 val swaggerRequestValidatorVersion = "3.0.0"
 val wiremockVersion = "3.13.2"
@@ -72,18 +72,18 @@ dependencies {
     testImplementation("com.atlassian.oai:swagger-request-validator-restassured:$swaggerRequestValidatorVersion")
 
     // Sårbarheter
-    implementation(platform("io.netty:netty-bom:4.2.19.Final")) {
+    implementation(platform("io.netty:netty-bom:4.2.20.Final")) {
         because("Align Netty modules on a patched release")
     }
 
     constraints {
-        implementation("tools.jackson.core:jackson-databind:3.2.3") {
+        implementation("tools.jackson.core:jackson-databind:3.2.4") {
             because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 3.2.0, <= 3.2.2")
         }
-        testImplementation("com.fasterxml.jackson.core:jackson-databind:2.22.3") {
+        testImplementation("com.fasterxml.jackson.core:jackson-databind:2.22.4") {
             because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 2.22.0, < 2.22.2")
         }
-        testImplementation("com.google.guava:guava:33.7.2-jre") {
+        testImplementation("com.google.guava:guava:33.8.0-jre") {
             because("GHSA-xxph-c9ww-hj94 affects Guava versions before 33.7.2")
         }
     }
