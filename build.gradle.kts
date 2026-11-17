@@ -26,8 +26,8 @@ val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
 val kotestVersion = "6.2.6"
 val kotlinxSerializationVersion = "1.12.0"
-val mockOAuth2ServerVersion = "6.1.4"
-val mockkVersion = "1.14.11"
+val mockOAuth2ServerVersion = "6.1.5"
+val mockkVersion = "1.14.12"
 val swaggerRequestValidatorVersion = "3.0.0"
 val wiremockVersion = "3.13.2"
 
@@ -77,10 +77,10 @@ dependencies {
     }
 
     constraints {
-        implementation("tools.jackson.core:jackson-databind:3.2.4") {
+        implementation("tools.jackson.core:jackson-databind:3.3.0") {
             because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 3.2.0, <= 3.2.2")
         }
-        testImplementation("com.fasterxml.jackson.core:jackson-databind:2.22.4") {
+        testImplementation("com.fasterxml.jackson.core:jackson-databind:2.23.0") {
             because("Multiple versions of jackson-databind has vulnerable dependencies. Affected version >= 2.22.0, < 2.22.2")
         }
         testImplementation("com.google.guava:guava:33.8.0-jre") {
