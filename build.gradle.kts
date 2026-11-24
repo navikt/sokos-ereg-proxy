@@ -19,13 +19,13 @@ repositories {
 
 val ktorVersion = "3.6.1"
 val kotlinxDatetimeVersion = "0.8.0-0.6.x-compat"
-val logbackVersion = "1.6.6"
+val logbackVersion = "1.6.7"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.17.2"
 val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.2.6"
-val kotlinxSerializationVersion = "1.12.0"
+val kotestVersion = "6.2.7"
+val kotlinxSerializationVersion = "1.13.0"
 val mockOAuth2ServerVersion = "6.1.5"
 val mockkVersion = "1.14.12"
 val swaggerRequestValidatorVersion = "3.0.0"
@@ -72,7 +72,7 @@ dependencies {
     testImplementation("com.atlassian.oai:swagger-request-validator-restassured:$swaggerRequestValidatorVersion")
 
     // Sårbarheter
-    implementation(platform("io.netty:netty-bom:4.2.20.Final")) {
+    implementation(platform("io.netty:netty-bom:4.2.21.Final")) {
         because("Align Netty modules on a patched release")
     }
 
